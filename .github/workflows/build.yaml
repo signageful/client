@@ -34,14 +34,9 @@ jobs:
         run: npm install
 
       - name: Make
-        run: npm run make --arch=${{ matrix.arch }}
+        run: npm run make -- --arch=${{ matrix.arch }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      # - name: Publish
-      #   run: npm run publish 
-      #   env:
-      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Release
         uses: softprops/action-gh-release@v1

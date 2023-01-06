@@ -10,11 +10,7 @@ import { rendererConfig } from "./webpack.renderer.config";
 const config: ForgeConfig = {
   packagerConfig: {},
   rebuildConfig: {},
-  makers: [
-    new MakerZIP({}, ["darwin", "linux"]),
-    new MakerRpm({}),
-    new MakerDeb({}),
-  ],
+  makers: [new MakerZIP({}, ["darwin"]), new MakerRpm({}), new MakerDeb({})],
   publishers: [
     {
       name: "@electron-forge/publisher-github",
