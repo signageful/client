@@ -1,0 +1,44 @@
+name: Build & Release
+
+on:
+  push:
+    branches:
+      - main
+    tags:
+      - v*
+  pull_request:
+
+jobs:
+  build:
+    name: Build (${{ matrix.os }} - ${{ matrix.arch }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ macOS-latest, ubuntu-latest ]
+        arch: [ x64, arm64 ]
+        include:
+          - os: ubuntu-latest
+            arch: armv7l
+        exclude:
+        - os: windows-latest
+          arch: arm64
+    steps:
+      - uses: actions/checkout@v3
+      - name: Setup Node.js
+        uses: actions/setup-node@v3.5.1
+        with:
+          node-version: 18.x
+          cache: npm
+      
+      - name: Install dependencies
+        run: npm install
+
+      - name: Make
+        run: npm run make --arch=${{ matrix.arch }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Publish
+        run: npm run 
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
