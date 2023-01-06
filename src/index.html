@@ -2,9 +2,13 @@
 <html>
   <head>
     <meta charset="UTF-8" />
-    <title>Hello World!</title>
+    <title>Signageful Client</title>
 
-  </head>
+
+    <!-- https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP -->
+    <meta http-equiv="Content-Security-Policy" content="default-src * 'unsafe-inline'; script-src 'self' 'unsafe-eval'; frame-src *">
+    <meta http-equiv="X-Content-Security-Policy" content="default-src * 'unsafe-inline'; script-src 'self' 'unsafe-eval'; frame-src *">
+    </head>
   <body>
     <div id="root"></div>
   </body>
