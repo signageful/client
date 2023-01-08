@@ -20,11 +20,12 @@ const machineId = machineIdSync(true);
 
 let mainWindow: BrowserWindow | null = null;
 
-const createWindow = (): void => {
+const createWindow = async (): Promise<void> => {
   // Create the browser window.
   mainWindow = new BrowserWindow({
     width: 1024,
     height: 728,
+    kiosk: true,
     webPreferences: {
       contextIsolation: true,
       webSecurity: false,
@@ -32,6 +33,8 @@ const createWindow = (): void => {
       preload: MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY,
     },
   });
+
+  mainWindow.removeMenu();
 
   let url = `https://app.signageful.com/player?serial=${machineId}`;
   if (isDebug) {
@@ -51,9 +54,12 @@ const createWindow = (): void => {
       callback({
         // strip out "x-frame-options" header and "content-security-policy" header
         responseHeaders: Object.fromEntries(
-          Object.entries(details.responseHeaders || {}).filter(
-            (header) => !/x-frame-options/i.test(header[0])
-          )
+          Object.entries(details.responseHeaders || {})
+            .filter((header) => !/x-frame-options/i.test(header[0]))
+            .filter((header) => !/frame-ancestors/i.test(header[0]))
+            .filter((header) => !/content-security-policy/i.test(header[0]))
+            .filter((header) => !/x-content-security-policy/i.test(header[0]))
+            .filter((header) => !/x-webkit-csp/i.test(header[0]))
         ),
       });
     }

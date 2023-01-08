@@ -1,4 +1,33 @@
 import React, { useEffect } from "react";
+import { Screensaver } from "./screensaver";
+
+const handleMessages = (evt: MessageEvent) => {
+  // check if evt.data has "type" as property
+  // if yes, then it is a message from the main process
+  // if no, then it is a message from the iframe
+  if (typeof evt.data === "object" && evt.data.type) {
+    console.log("received message from iframe: ", evt.data);
+    switch (evt.data.type) {
+      case "signageful:screensaver:register": {
+        window.electron.ipcRenderer.sendMessage("register-screensaver", {
+          threshold: evt.data.threshold,
+        });
+        return;
+      }
+      case "signageful:screensaver:unregister": {
+        window.electron.ipcRenderer.sendMessage("unregister-screensaver", {
+          threshold: evt.data.threshold,
+        });
+        return;
+      }
+      default: {
+        window.electron.ipcRenderer.sendMessage("message", evt.data);
+      }
+    }
+    // handle message from main process
+    // ...
+  }
+};
 
 const searchParams = new URLSearchParams(window.location.search);
 const target = searchParams.get("target") || "";
@@ -27,11 +56,10 @@ export const App: React.FC = () => {
           const iframeWindow = iframe.contentWindow;
           if (!iframeWindow) return;
 
-          iframeWindow.addEventListener("message", (evt) => {
-            window.electron.ipcRenderer.sendMessage("message", evt.data);
-          });
+          iframeWindow.addEventListener("message", handleMessages);
         }}
       />
+      <Screensaver />
     </div>
   );
 };

@@ -3,7 +3,13 @@
 import { contextBridge, ipcRenderer } from "electron";
 import type { IpcRendererEvent } from "electron";
 
-export type Channels = "ipc-example" | "message";
+export type Channels =
+  | "ipc-example"
+  | "message"
+  | "register-screensaver"
+  | "unregister-screensaver"
+  | "show-screen-saver"
+  | "hide-screen-saver";
 
 const electronHandler = {
   ipcRenderer: {
@@ -19,8 +25,14 @@ const electronHandler = {
         ipcRenderer.removeListener(channel, subscription);
       };
     },
+    off(channel: Channels, func: (...args: unknown[]) => void) {
+      ipcRenderer.removeListener(channel, (_event, ...args) => func(...args));
+    },
     once(channel: Channels, func: (...args: unknown[]) => void) {
       ipcRenderer.once(channel, (_event, ...args) => func(...args));
+    },
+    removeAllListeners(channel: Channels) {
+      ipcRenderer.removeAllListeners(channel);
     },
   },
 };
