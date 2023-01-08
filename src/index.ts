@@ -65,6 +65,11 @@ const createWindow = async (): Promise<void> => {
     }
   );
 
+  mainWindow.webContents.on("dom-ready", () => {
+    const css = "* { cursor: none !important; }";
+    mainWindow.webContents.insertCSS(css);
+  });
+
   mainWindow.on("closed", () => {
     mainWindow = null;
   });
