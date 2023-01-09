@@ -25,7 +25,7 @@ const createWindow = async (): Promise<void> => {
   mainWindow = new BrowserWindow({
     width: 1024,
     height: 728,
-    kiosk: true,
+    kiosk: !isDebug,
     webPreferences: {
       contextIsolation: true,
       webSecurity: false,
