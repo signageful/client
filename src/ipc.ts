@@ -7,21 +7,30 @@ ipcMain.addListener("ipc-example", (event, args) => {
 });
 
 ipcMain.addListener("message", (event, args) => {
-  console.log(args);
   event.reply("message", "pong");
 });
 
+type ScreensaverOptions = {
+  idleTime: number | string;
+  source: string;
+};
+
 let screenSaverInterval: NodeJS.Timeout | null = null;
 
-ipcMain.on("register-screensaver", async (event, arg) => {
+ipcMain.on("register-screensaver", async (event, arg: ScreensaverOptions) => {
+  if (!arg) return;
+  if (!arg.idleTime) return;
+
   if (screenSaverInterval) {
     return;
   }
+
   screenSaverInterval = setInterval(() => {
-    const idleState = powerMonitor.getSystemIdleState(5);
+    const idleTime = parseInt(arg.idleTime as string, 10);
+    const idleState = powerMonitor.getSystemIdleState(idleTime);
 
     if (idleState === "idle") {
-      event.sender.send("show-screen-saver");
+      event.sender.send("show-screen-saver", arg.source);
     } else {
       event.sender.send("hide-screen-saver");
     }

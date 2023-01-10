@@ -3,19 +3,22 @@ import React, { useCallback, useEffect, useRef, useState } from "react";
 export const Screensaver: React.FC = () => {
   const [state, setState] = useState<{
     show: boolean;
+    source: string;
   }>({
     show: false,
+    source: "",
   });
 
   const videoEl = useRef<HTMLVideoElement>(null);
 
   const manageState = useCallback(
-    (newState: boolean) => {
+    (newState: boolean, source?: string) => {
       if (newState === state.show) return;
 
       setState((prevState) => ({
         ...prevState,
         show: newState,
+        source: source || prevState.source,
       }));
     },
     [state.show]
@@ -24,9 +27,9 @@ export const Screensaver: React.FC = () => {
   useEffect(() => {
     if (!window) return;
 
-    window.electron.ipcRenderer.on("show-screen-saver", () =>
-      manageState(true)
-    );
+    window.electron.ipcRenderer.on("show-screen-saver", (data: string) => {
+      manageState(true, data);
+    });
 
     window.electron.ipcRenderer.on("hide-screen-saver", () => {
       manageState(false);
@@ -51,6 +54,7 @@ export const Screensaver: React.FC = () => {
   };
 
   if (!state.show) return null;
+  if (!state.source || state.source === "") return null;
 
   return (
     <div
@@ -81,10 +85,7 @@ export const Screensaver: React.FC = () => {
           height: "100%",
         }}
       >
-        <source
-          src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
-          type="video/mp4"
-        ></source>
+        <source src={state.source}></source>
         Your browser does not support MP4 Format videos or HTML5 Video.
       </video>
     </div>

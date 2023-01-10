@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { Screensaver } from "./screensaver";
 
 const handleMessages = (evt: MessageEvent) => {
@@ -6,11 +6,11 @@ const handleMessages = (evt: MessageEvent) => {
   // if yes, then it is a message from the main process
   // if no, then it is a message from the iframe
   if (typeof evt.data === "object" && evt.data.type) {
-    console.log("received message from iframe: ", evt.data);
     switch (evt.data.type) {
       case "signageful:screensaver:register": {
         window.electron.ipcRenderer.sendMessage("register-screensaver", {
-          threshold: evt.data.threshold,
+          idleTime: evt.data.data.idleTime,
+          source: evt.data.data.source,
         });
         return;
       }
