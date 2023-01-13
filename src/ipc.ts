@@ -1,4 +1,8 @@
 import { ipcMain, powerMonitor } from "electron";
+import {
+  IPC_SCREENSAVER_REGISTER,
+  IPC_SCREENSAVER_UNREGISTER,
+} from "./shared/events";
 
 ipcMain.addListener("ipc-example", (event, args) => {
   const msgTemplate = (pingPong: string) => `IPC test: ${pingPong}`;
@@ -17,11 +21,11 @@ type ScreensaverOptions = {
 
 let screenSaverInterval: NodeJS.Timeout | null = null;
 
-ipcMain.on("register-screensaver", async (event, arg: ScreensaverOptions) => {
-  if (!arg) return;
-  if (!arg.idleTime) return;
-
-  if (screenSaverInterval) {
+ipcMain.on(IPC_SCREENSAVER_REGISTER, async (event, arg: ScreensaverOptions) => {
+  if (!arg) {
+    return;
+  }
+  if (!arg.idleTime) {
     return;
   }
 
@@ -39,10 +43,10 @@ ipcMain.on("register-screensaver", async (event, arg: ScreensaverOptions) => {
   }, 1000);
 });
 
-ipcMain.on("unregister-screensaver", async (event, arg) => {
+ipcMain.on(IPC_SCREENSAVER_UNREGISTER, async (event, arg) => {
   if (screenSaverInterval) {
     clearInterval(screenSaverInterval);
+    screenSaverInterval = null;
   }
-
-  ipcMain.emit("disable-screen-saver");
+  event.sender.send("hide-screen-saver");
 });

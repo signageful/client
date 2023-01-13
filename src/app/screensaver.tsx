@@ -15,6 +15,8 @@ export const Screensaver: React.FC = () => {
     (newState: boolean, source?: string) => {
       if (newState === state.show) return;
 
+      console.debug("Managing screensaver state", newState, source);
+
       setState((prevState) => ({
         ...prevState,
         show: newState,
@@ -28,6 +30,7 @@ export const Screensaver: React.FC = () => {
     if (!window) return;
 
     window.electron.ipcRenderer.on("show-screen-saver", (data: string) => {
+      console.log("show-screen-saver");
       manageState(true, data);
     });
 
@@ -38,6 +41,7 @@ export const Screensaver: React.FC = () => {
     return () => {
       window.electron.ipcRenderer.removeAllListeners("show-screen-saver");
       window.electron.ipcRenderer.removeAllListeners("hide-screen-saver");
+      manageState(false);
     };
   }, [manageState]);
 

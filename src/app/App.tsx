@@ -1,24 +1,32 @@
 import React from "react";
 import { Screensaver } from "./screensaver";
+import {
+  IPC_SCREENSAVER_REGISTER,
+  IPC_SCREENSAVER_UNREGISTER,
+  SIGNAGEFUL_SCREENSAVER_REGISTER,
+  SIGNAGEFUL_SCREENSAVER_UNREGISTER,
+} from "../shared/events";
 
 const handleMessages = (evt: MessageEvent) => {
   // check if evt.data has "type" as property
   // if yes, then it is a message from the main process
   // if no, then it is a message from the iframe
   if (typeof evt.data === "object" && evt.data.type) {
+    console.log("received event: ", evt.data.type, evt.data.data || "");
     switch (evt.data.type) {
-      case "signageful:screensaver:register": {
-        window.electron.ipcRenderer.sendMessage("register-screensaver", {
+      case SIGNAGEFUL_SCREENSAVER_REGISTER: {
+        window.electron.ipcRenderer.sendMessage(IPC_SCREENSAVER_REGISTER, {
           idleTime: evt.data.data.idleTime,
           source: evt.data.data.source,
         });
-        return;
+        break;
       }
-      case "signageful:screensaver:unregister": {
-        window.electron.ipcRenderer.sendMessage("unregister-screensaver", {
+      case SIGNAGEFUL_SCREENSAVER_UNREGISTER: {
+        console.log("unregistering screensaver");
+        window.electron.ipcRenderer.sendMessage(IPC_SCREENSAVER_UNREGISTER, {
           threshold: evt.data.threshold,
         });
-        return;
+        break;
       }
       default: {
         window.electron.ipcRenderer.sendMessage("message", evt.data);
