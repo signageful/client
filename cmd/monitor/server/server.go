@@ -11,7 +11,7 @@ func CreateDefaultServer(providers middleware.Providers) *echo.Echo {
 
 	mw := middleware.NewBridgeBuilder().WithProviders(providers).Build()
 
-	server.GET("/", mw(handlers.GetStats))
+	server.GET("/api/system/info", mw(handlers.GetSystemInfo))
 
 	return server
 }

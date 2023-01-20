@@ -6,6 +6,7 @@ import {
   SIGNAGEFUL_SCREENSAVER_REGISTER,
   SIGNAGEFUL_SCREENSAVER_UNREGISTER,
 } from "../shared/events";
+import { useSystemInfo } from "./hooks/use-system-info";
 
 const handleMessages = (evt: MessageEvent) => {
   // check if evt.data has "type" as property
@@ -39,8 +40,13 @@ const handleMessages = (evt: MessageEvent) => {
 
 const searchParams = new URLSearchParams(window.location.search);
 const target = searchParams.get("target") || "";
+const targetURL = new URL(target);
+const serialParams = new URLSearchParams(targetURL.search);
+const serial = serialParams.get("serial") || "";
 
 export const App: React.FC = () => {
+  useSystemInfo(serial);
+
   return (
     <div
       style={{

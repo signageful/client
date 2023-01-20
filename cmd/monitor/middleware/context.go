@@ -1,6 +1,10 @@
 package middleware
 
-import "github.com/labstack/echo/v4"
+import (
+	"net/http"
+
+	"github.com/labstack/echo/v4"
+)
 
 type Context struct {
 	echo.Context
@@ -13,4 +17,11 @@ func NewContext(requestCtx echo.Context, providers Providers) *Context {
 		Context:   requestCtx,
 		Providers: providers,
 	}
+}
+
+func (ctx *Context) SetJSONBody(value any) error {
+	return ctx.Context.JSON(http.StatusOK, OKResponse{
+		Data:   value,
+		Status: "OK",
+	})
 }

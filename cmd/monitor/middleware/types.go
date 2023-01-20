@@ -9,3 +9,9 @@ type RequestHandler = func(*Context) error
 type Providers struct {
 	Container *container.Container
 }
+
+// OKResponse model of a status OK response.
+type OKResponse struct {
+	Status string `json:"status"`
+	Data   any    `json:"data,omitempty"`
+}
