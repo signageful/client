@@ -1,3 +1,6 @@
+//go:build linux || (darwin && cgo)
+// +build linux darwin,cgo
+
 package container
 
 import "github.com/mackerelio/go-osstat/cpu"

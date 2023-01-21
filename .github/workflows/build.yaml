@@ -77,12 +77,12 @@ jobs:
       - name: Build Darwin
         if: matrix.os == 'macOS-latest'
         run: |
-           GOOS=darwin GOARCH=${{ matrix.arch }} go build -o build/sig-monitor ./cmd/monitor
+          CGO_ENABLED=1 GOOS=darwin GOARCH=${{ matrix.arch }} go build -o build/sig-monitor ./cmd/monitor
 
       - name: Build Linux
         if: matrix.os == 'ubuntu-latest'
         run: |
-          GOOS=linux GOARCH=${{ matrix.arch }} go build -o build/sig-monitor ./cmd/monitor
+          CGO_ENABLED=1 GOOS=linux GOARCH=${{ matrix.arch }} go build -o build/sig-monitor ./cmd/monitor
 
       - name: Build
         run: go build -o build/sig-monitor ./cmd/monitor
