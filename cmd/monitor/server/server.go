@@ -8,6 +8,7 @@ import (
 
 func CreateDefaultServer(providers middleware.Providers) *echo.Echo {
 	server := echo.New()
+	server.HideBanner = true
 
 	mw := middleware.NewBridgeBuilder().WithProviders(providers).Build()
 

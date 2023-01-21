@@ -53,3 +53,28 @@ jobs:
             out/**/*.rpm
             out/**/*.zip
             out/**/RELEASES
+  build-monitor:
+    name: Build Monitor
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup Go
+        uses: actions/setup-go@v3
+        with:
+          go-version: 1.19.x
+
+      - name: Build
+        run: go build -o build/sig-monitor ./cmd/monitor
+
+      - name: Tar
+        # tar -czvf sig-monitor_arm64.tar.gz ./build/sig-monitor
+        run: tar -czf build/sig-monitor_${{ matrix.arch }}.tar.gz -C build sig-monitor
+
+      - name: Compress action step
+        if: startsWith(github.ref, 'refs/tags/')
+        uses: softprops/action-gh-release@v1
+        with:
+          draft: true
+          files: |
+            build/sig-monitor_*.tar.gz
