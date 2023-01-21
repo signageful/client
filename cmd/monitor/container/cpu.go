@@ -2,10 +2,7 @@ package container
 
 import "github.com/mackerelio/go-osstat/cpu"
 
-type cpuGenerator struct {
-	cpu *cpu.Stats
-	err error
-}
+type cpuGenerator struct{}
 
 type CPU struct {
 	User   uint64 `json:"user"`
