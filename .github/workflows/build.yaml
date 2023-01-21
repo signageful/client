@@ -88,8 +88,12 @@ jobs:
         run: go build -o build/sig-monitor ./cmd/monitor
 
       - name: Tar
-        # tar -czvf sig-monitor_arm64.tar.gz ./build/sig-monitor
-        run: tar -czf build/sig-monitor_${{ matrix.arch }}.tar.gz -C build sig-monitor
+        if: matrix.os == 'ubuntu-latest'
+        run: tar -czf build/sig-monitor_linux_${{ matrix.arch }}.tar.gz -C build sig-monitor
+      
+      - name: Tar
+        if: matrix.os == 'macOS-latest'
+        run: tar -czf build/sig-monitor_darwin_${{ matrix.arch }}.tar.gz -C build sig-monitor
 
       - name: Compress action step
         if: startsWith(github.ref, 'refs/tags/')
