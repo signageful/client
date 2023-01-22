@@ -1,7 +1,7 @@
 {
   "name": "signageful-client",
   "productName": "signageful-client",
-  "version": "1.8.3",
+  "version": "1.9.4",
   "description": "Signageful client",
   "main": ".webpack/main",
   "scripts": {
