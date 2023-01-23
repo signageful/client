@@ -84,8 +84,8 @@ jobs:
         run: |
           GOOS=linux GOARCH=${{ matrix.arch }} go build -o build/sig-monitor ./cmd/monitor
 
-      - name: Build
-        run: go build -o build/sig-monitor ./cmd/monitor
+      # - name: Build
+      #   run: go build -o build/sig-monitor ./cmd/monitor
 
       - name: Tar
         if: matrix.os == 'ubuntu-latest'
