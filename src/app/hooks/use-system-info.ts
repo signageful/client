@@ -17,7 +17,6 @@ export const useSystemInfo = (hwid: string) => {
   }, []);
 
   const fetchSystemInfo = useCallback(async () => {
-    console.log("Fetching system info...");
     try {
       const result = await getSystemInfo();
       if (result) {
