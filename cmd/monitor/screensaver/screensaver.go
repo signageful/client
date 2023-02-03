@@ -48,7 +48,6 @@ func NewScreensaverProvider(hub *ws.Hub) *Screensaver {
 }
 
 func (s *Screensaver) registerMessageHandler(data json.RawMessage) error {
-	fmt.Println("Register Screensaver received")
 	// convert data to Options
 	options := ScreensaverOptions{}
 	if err := json.Unmarshal(data, &options); err != nil {
@@ -62,7 +61,6 @@ func (s *Screensaver) registerMessageHandler(data json.RawMessage) error {
 }
 
 func (s *Screensaver) handleRefresh(data json.RawMessage) error {
-	fmt.Println("Refresh Screensaver received")
 	if s.ticker != nil {
 		s.ticker.Reset(time.Duration(s.threshold) * time.Second)
 	}
@@ -71,7 +69,6 @@ func (s *Screensaver) handleRefresh(data json.RawMessage) error {
 }
 
 func (s *Screensaver) handleDisable(data json.RawMessage) error {
-	fmt.Println("Disable Screensaver received")
 	if s.ticker != nil {
 		s.ticker.Stop()
 		s.ticker = nil
