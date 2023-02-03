@@ -1,8 +1,6 @@
 package handlers
 
 import (
-	"fmt"
-
 	"github.com/signageful/client/cmd/monitor/middleware"
 	"golang.org/x/net/websocket"
 )
@@ -27,7 +25,6 @@ func WsScreensaver(ctx *middleware.Context) error {
 			if err != nil {
 				ctx.Logger().Error(err)
 			}
-			fmt.Printf("%s\n", msg)
 		}
 	}).ServeHTTP(ctx.Response(), ctx.Request())
 

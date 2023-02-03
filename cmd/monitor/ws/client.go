@@ -2,7 +2,6 @@ package ws
 
 import (
 	"encoding/json"
-	"fmt"
 	"log"
 	"net/http"
 	"time"
@@ -41,8 +40,6 @@ func ServeWS(hub *Hub, c echo.Context) {
 	}
 
 	client := newClient(conn, hub)
-
-	fmt.Println("Hello!")
 
 	go client.writePump()
 	go client.readPump()

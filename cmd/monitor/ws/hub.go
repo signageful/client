@@ -2,7 +2,6 @@ package ws
 
 import (
 	"encoding/json"
-	"fmt"
 	"log"
 )
 
@@ -61,7 +60,6 @@ func (h *Hub) Run() {
 }
 
 func (h *Hub) registerClient(client *Client) {
-	fmt.Println("registering a new client")
 	h.clients[client] = true
 }
 
@@ -95,7 +93,6 @@ func (message *WebsocketMessage) Encode() []byte {
 
 func (h *Hub) broadcastToClients(message []byte) {
 	for client := range h.clients {
-		fmt.Println("Sending message to client")
 		client.send <- message
 	}
 }

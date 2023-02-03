@@ -4,7 +4,6 @@ go 1.19
 
 require (
 	github.com/coreos/pkg v0.0.0-20220810130054-c7d1c02cb6cf
-	github.com/davecgh/go-spew v1.1.1
 	github.com/gorilla/websocket v1.4.2
 	github.com/labstack/echo/v4 v4.10.0
 	github.com/mackerelio/go-osstat v0.2.3
