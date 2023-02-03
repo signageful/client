@@ -8,7 +8,9 @@ import (
 	"github.com/signageful/client/cmd/monitor/config"
 	"github.com/signageful/client/cmd/monitor/container"
 	"github.com/signageful/client/cmd/monitor/middleware"
+	"github.com/signageful/client/cmd/monitor/screensaver"
 	"github.com/signageful/client/cmd/monitor/server"
+	"github.com/signageful/client/cmd/monitor/ws"
 	"github.com/spf13/cobra"
 )
 
@@ -66,7 +68,11 @@ func runRootCmd(cmd *cobra.Command, args []string) {
 }
 
 func getProviders() middleware.Providers {
+	wsHub := ws.NewWebsocketHub(&ws.Config{})
+
 	return middleware.Providers{
-		Container: container.NewContainerProvider(),
+		Container:   container.NewContainerProvider(),
+		Screensaver: screensaver.NewScreensaverProvider(wsHub),
+		Hub:         wsHub,
 	}
 }

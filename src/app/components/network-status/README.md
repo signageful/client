@@ -1,0 +1,1 @@
+Credits for this goes to [tofiqquadri](https://github.com/tofiqquadri/react-network-status) licensed under MIT.

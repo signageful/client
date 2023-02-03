@@ -5,3 +5,5 @@ export const SIGNAGEFUL_SCREENSAVER_UNREGISTER =
 
 export const IPC_SCREENSAVER_REGISTER = "register-screensaver";
 export const IPC_SCREENSAVER_UNREGISTER = "unregister-screensaver";
+
+export const SIGNAGEFUL_SCREENSAVER_RESET = "signageful:screensaver:reset";
