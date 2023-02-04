@@ -1,5 +1,18 @@
+import { useRecoilState, useRecoilValue } from "recoil";
+import { NetworkScreen } from "./network-screen";
+import { networkState } from "./network.state";
 import { IPollingConfig } from "./types";
 import { useNetworkStatus } from "./use-network-status";
+
+interface NetworkDetectorProps {
+  children: React.ReactNode;
+}
+
+const defaultConfig: IPollingConfig = {
+  enabled: true,
+  interval: 1000,
+  timeout: 5000,
+};
 
 /**
  * NetworkDetector is a component that will detect network status changes and
@@ -7,10 +20,18 @@ import { useNetworkStatus } from "./use-network-status";
  *
  * @future this component should render a UI element when the network is offline.
  */
-export const NetworkDetector: React.FC<{
-  config: IPollingConfig | boolean;
-  onChange: (param: boolean) => void;
-}> = ({ config = {}, onChange }) => {
-  useNetworkStatus((online) => onChange(online), config);
-  return null;
+export const NetworkDetector: React.FC<NetworkDetectorProps> = ({
+  children,
+}) => {
+  const state = useRecoilValue(networkState);
+
+  useNetworkStatus({
+    pollingOptions: defaultConfig,
+  });
+
+  if (state.isOnline) {
+    return <>{children}</>;
+  }
+
+  return <NetworkScreen onLine={state.isOnline} />;
 };

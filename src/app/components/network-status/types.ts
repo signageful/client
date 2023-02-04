@@ -14,6 +14,11 @@ export interface IPollingConfig {
   interval?: number;
 }
 
+export type UseNetworkStatusOptions = {
+  callback?: (online: boolean) => void;
+  pollingOptions?: IPollingConfig | boolean;
+};
+
 export type UseNetworkStatusType = (
   callback: (online: boolean) => void,
   pollingOptions?: IPollingConfig | boolean

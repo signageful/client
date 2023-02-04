@@ -1,20 +1,15 @@
 import { useEffect } from "react";
+import { useRecoilState } from "recoil";
+import { networkState } from "./network.state";
 import {
   GetPollingConfigType,
   IsPollingType,
   PingType,
-  UseNetworkStatusType,
+  UseNetworkStatusOptions,
 } from "./types";
 
 export const needsPolling: IsPollingType = (navigator) => {
-  // these browsers don't fully support navigator.onLine, so we need to use a polling backup
-  const unsupportedUserAgentsPattern =
-    /Windows.*Chrome|Windows.*Firefox|Linux.*Chrome/;
-
-  if (
-    typeof navigator !== "undefined" &&
-    unsupportedUserAgentsPattern.test(navigator.userAgent)
-  ) {
+  if (typeof navigator === "undefined") {
     return true;
   }
 
@@ -69,15 +64,27 @@ const getPollingConfigs: GetPollingConfigType = (
   }
 };
 
-export const useNetworkStatus: UseNetworkStatusType = (
-  callback,
-  pollingOptions = {}
-) => {
+const noop = () => {
+  return;
+};
+
+export const useNetworkStatus = (options: UseNetworkStatusOptions = {}) => {
+  const { callback = noop, pollingOptions = {} } = options;
+  const [isOnline, setIsOnline] = useRecoilState(networkState);
+
   const goOnline = () => {
+    setIsOnline((prevState) => ({
+      ...prevState,
+      isOnline: true,
+    }));
     callback(true);
   };
 
   const goOffline = () => {
+    setIsOnline((prevState) => ({
+      ...prevState,
+      isOnline: false,
+    }));
     callback(false);
   };
 
@@ -90,8 +97,11 @@ export const useNetworkStatus: UseNetworkStatusType = (
   );
 
   useEffect(() => {
-    // initial online event fired.
-    callback(true);
+    if (navigator.onLine) {
+      goOnline();
+    } else {
+      goOffline();
+    }
 
     window.addEventListener("online", goOnline);
     window.addEventListener("offline", goOffline);
@@ -100,7 +110,7 @@ export const useNetworkStatus: UseNetworkStatusType = (
     let intervalId: number | undefined;
 
     // if we are polling for online status, set up the setInterval.
-    if ((mustPoll || enabled) && "url" in pingConfig) {
+    if (mustPoll && "url" in pingConfig) {
       const { url, timeout, interval } = pingConfig;
 
       intervalId = window.setInterval(() => {
@@ -120,4 +130,8 @@ export const useNetworkStatus: UseNetworkStatusType = (
       }
     };
   }, []);
+
+  return [isOnline] as const;
 };
+
+export type UseNetworkStatus = ReturnType<typeof useNetworkStatus>;
