@@ -10,7 +10,7 @@ interface NetworkDetectorProps {
 
 const defaultConfig: IPollingConfig = {
   enabled: true,
-  interval: 1000,
+  interval: 5000,
   timeout: 5000,
 };
 

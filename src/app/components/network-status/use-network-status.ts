@@ -110,7 +110,7 @@ export const useNetworkStatus = (options: UseNetworkStatusOptions = {}) => {
     let intervalId: number | undefined;
 
     // if we are polling for online status, set up the setInterval.
-    if (mustPoll && "url" in pingConfig) {
+    if ((mustPoll || enabled) && "url" in pingConfig) {
       const { url, timeout, interval } = pingConfig;
 
       intervalId = window.setInterval(() => {
