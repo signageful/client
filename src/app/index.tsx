@@ -35,3 +35,13 @@ root.render(
     </ChakraProvider>
   </RecoilRoot>
 );
+
+if ("serviceWorker" in navigator) {
+  navigator.serviceWorker.register("/sw.js", { scope: "/" }).then(() => {
+    console.log("service worker registered");
+  });
+
+  navigator.serviceWorker.ready.then(() => {
+    console.log("service worker ready");
+  });
+}
