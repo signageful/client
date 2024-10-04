@@ -20,9 +20,6 @@ function shouldCache(url) {
     url.toLowerCase().includes("digitaloceanspaces")
   );
 }
-
-console.log("this is the service worker");
-
 self.addEventListener("install", (event) => {
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => {
@@ -47,6 +44,32 @@ self.addEventListener("fetch", (event) => {
           }
 
           console.log(`cache miss for ${event.request.url}`);
+
+          if (event.request.headers.get("range")) {
+            console.log("it has a range header");
+
+            // Create a new headers object without the range header
+            const newHeaders = new Headers(event.request.headers);
+            newHeaders.delete("range");
+
+            // Create a new request with the modified headers
+            const rangeRequest = new Request(event.request.url, {
+              method: event.request.method,
+              headers: newHeaders,
+              mode: event.request.mode,
+              credentials: event.request.credentials,
+              cache: event.request.cache,
+              redirect: event.request.redirect,
+              referrer: event.request.referrer,
+              integrity: event.request.integrity,
+            });
+
+            return fetch(rangeRequest).then((networkResponse) => {
+              const responseToCache = networkResponse.clone();
+              cache.put(event.request, responseToCache);
+              return networkResponse;
+            });
+          }
 
           // Asset ist nicht im Cache, holen Sie es vom Netzwerk
           return fetch(event.request).then((networkResponse) => {
